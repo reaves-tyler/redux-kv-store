@@ -31,7 +31,7 @@ class KVStore {
     sync(context) {
         let state = Object.assign({}, context.state);
         for (let prop in state) {
-            if (Object.keys(this.store.getState())[prop]) {
+            if (Object.keys(this.store.getState()).includes(prop)) {
                 let statUx = this.get(String(prop));
                 if (JSON.stringify(state[prop]) !== JSON.stringify(statUx)) {
                     state[prop] = statUx;

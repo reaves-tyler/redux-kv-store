@@ -3,7 +3,6 @@ import { createStore } from "redux";
 export default class KVStore {
   /*
     [Module]Store.js
-    import { KVStore } from '../../Lib/KVStore'
 
     export enum KVEnum {
         Administrator = 'Administrator'
@@ -76,7 +75,7 @@ export default class KVStore {
 
     // Iterate state of subscriber
     for (let prop in state) {
-      if (Object.keys(this.store.getState())[prop]) {
+      if (Object.keys(this.store.getState()).includes(prop)) {
         // Get the Redux state of the subscriber state property
         let statUx = this.get(String(prop));
 
