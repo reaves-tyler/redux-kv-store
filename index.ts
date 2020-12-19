@@ -1,22 +1,6 @@
 import { createStore } from "redux";
 
 export default class KVStore {
-  /*
-    [Module]Store.js
-
-    export enum KVEnum {
-        Administrator = 'Administrator'
-        Secondary = 'Secondary'
-    }
-
-    const kv = {
-        [KVEnum.Administrator]: 'Tyler',
-        [KVEnum.Secondary]: 'Bill'
-    };
-
-    export const AdministrationKV = new KVStore(kv);
-    *
-    */
 
   public actionTypes: object;
   public store: any; // TODO change to Store type
