@@ -5,7 +5,7 @@ interface state {
     [KVEnum.Count]: number
 }
 
-export class Component extends React.Component<undefined, state> {
+export class Component extends React.Component<{}, state> {
     constructor(props) {
         super(props);
 
