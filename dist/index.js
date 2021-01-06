@@ -25,7 +25,7 @@ class KVStore {
     }
     rootReducer(state, action) {
         return Object.assign({}, state, {
-            [action.type]: state[action.type] = action.payload,
+            [action.type]: (state[action.type] = action.payload),
         });
     }
     sync(context) {
@@ -44,7 +44,9 @@ class KVStore {
                 delete state[prop];
             }
         }
-        if (Object.keys(state).length !== 0 && context.setState) {
+        if (Object.keys(state).length !== 0 &&
+            context.setState &&
+            context.updater.isMounted(context)) {
             context.setState(state);
         }
         return state;

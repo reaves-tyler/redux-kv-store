@@ -1,6 +1,22 @@
 import { createStore } from "redux";
 
 export default class KVStore {
+  /*
+    [Module]Store.js
+
+    export enum KVEnum {
+        Administrator = 'Administrator'
+        Secondary = 'Secondary'
+    }
+
+    const kv = {
+        [KVEnum.Administrator]: 'Tyler',
+        [KVEnum.Secondary]: 'Bill'
+    };
+
+    export const AdministrationKV = new KVStore(kv);
+    *
+    */
 
   public actionTypes: object;
   public store: any; // TODO change to Store type
@@ -46,7 +62,7 @@ export default class KVStore {
     }
   ) {
     return Object.assign({}, state, {
-      [action.type]: state[action.type] = action.payload,
+      [action.type]: (state[action.type] = action.payload),
     });
   }
 
@@ -78,7 +94,11 @@ export default class KVStore {
     }
 
     //  Check to make sure we have properties in our object and `setState` exists
-    if (Object.keys(state).length !== 0 && context.setState) {
+    if (
+      Object.keys(state).length !== 0 &&
+      context.setState &&
+      context.updater.isMounted(context)
+    ) {
       context.setState(state);
     }
 
