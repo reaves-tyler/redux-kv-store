@@ -25,31 +25,30 @@ class KVStore {
     }
     rootReducer(state, action) {
         return Object.assign({}, state, {
-            [action.type]: (state[action.type] = action.payload),
+            [action.type]: state[action.type] = action.payload,
         });
     }
     sync(context) {
-        let state = Object.assign({}, context.state);
-        for (let prop in state) {
-            if (Object.keys(this.store.getState()).includes(prop)) {
-                let statUx = this.get(String(prop));
-                if (JSON.stringify(state[prop]) !== JSON.stringify(statUx)) {
-                    state[prop] = statUx;
+        if (context.updater.isMounted(context)) {
+            let state = Object.assign({}, context.state);
+            for (let prop in state) {
+                if (Object.keys(this.store.getState()).includes(prop)) {
+                    let statUx = this.get(String(prop));
+                    if (JSON.stringify(state[prop]) !== JSON.stringify(statUx)) {
+                        state[prop] = statUx;
+                    }
+                    else {
+                        delete state[prop];
+                    }
                 }
                 else {
                     delete state[prop];
                 }
             }
-            else {
-                delete state[prop];
+            if (Object.keys(state).length !== 0 && context.setState) {
+                context.setState(state);
             }
         }
-        if (Object.keys(state).length !== 0 &&
-            context.setState &&
-            context.updater.isMounted(context)) {
-            context.setState(state);
-        }
-        return state;
     }
     sub(context) {
         this.store.subscribe(() => this.sync(context));

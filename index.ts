@@ -62,7 +62,7 @@ export default class KVStore {
     }
   ) {
     return Object.assign({}, state, {
-      [action.type]: (state[action.type] = action.payload),
+      [action.type]: state[action.type] = action.payload,
     });
   }
 
@@ -70,39 +70,36 @@ export default class KVStore {
    * Redux store subscribe helper function to compare component state and redux state and setState if applicable
    */
   sync(context: any) {
-    // Create new object to prevent reference issues
-    let state = Object.assign({}, context.state);
+    // Check if the component is mounted instead of unsubscribing on componentWillUnmount
+    if (context.updater.isMounted(context)) {
+      // Create new object to prevent reference issues
+      let state = Object.assign({}, context.state);
 
-    // Iterate state of subscriber
-    for (let prop in state) {
-      if (Object.keys(this.store.getState()).includes(prop)) {
-        // Get the Redux state of the subscriber state property
-        let statUx = this.get(String(prop));
+      // Iterate state of subscriber component
+      for (let prop in state) {
+        if (Object.keys(this.store.getState()).includes(prop)) {
+          // Get the Redux state of the subscriber state property
+          let statUx = this.get(String(prop));
 
-        // Compare types using Stringify (Functions do not compare here)
-        if (JSON.stringify(state[prop]) !== JSON.stringify(statUx)) {
-          // If values are not equal between the subscriber state and redux state
-          // Set the subscriber state property to the value of the redux state
-          state[prop] = statUx;
+          // Compare types using Stringify (Functions do not compare here)
+          if (JSON.stringify(state[prop]) !== JSON.stringify(statUx)) {
+            // If values are not equal between the subscriber state and redux state
+            // Set the subscriber state property to the value of the redux state
+            state[prop] = statUx;
+          } else {
+            // If the state values are the same, we don't need to update that property
+            delete state[prop];
+          }
         } else {
-          // If the state values are the same, we don't need to update that property
           delete state[prop];
         }
-      } else {
-        delete state[prop];
+      }
+
+      //  Check to make sure we have properties in our object and `setState` exists
+      if (Object.keys(state).length !== 0 && context.setState) {
+        context.setState(state);
       }
     }
-
-    //  Check to make sure we have properties in our object and `setState` exists
-    if (
-      Object.keys(state).length !== 0 &&
-      context.setState &&
-      context.updater.isMounted(context)
-    ) {
-      context.setState(state);
-    }
-
-    return state;
   }
 
   // Shorthand subscriber for subbed component

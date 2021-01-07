@@ -34,9 +34,6 @@ test("set() and get() store values", () => {
     });
     expect(kv.get("ADDRESS")).toBe("456 Smith Road");
 });
-test("sync()", () => {
-    expect(kv.sync(kvState)).toStrictEqual({ NAME: "Bill" });
-});
 test("reset() to original state values", () => {
     kv.reset();
     expect(kv.get("NAME")).toBe(defaultValues.NAME);
