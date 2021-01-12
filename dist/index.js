@@ -28,7 +28,7 @@ class KVStore {
             [action.type]: state[action.type] = action.payload,
         });
     }
-    sync(context) {
+    classSync(context) {
         if (context.updater.isMounted(context)) {
             let state = Object.assign({}, context.state);
             for (let prop in state) {
@@ -50,8 +50,21 @@ class KVStore {
             }
         }
     }
-    sub(context) {
-        this.store.subscribe(() => this.sync(context));
+    fcSync(context) {
+        for (let prop in context) {
+            let statUx = this.get(String(prop));
+            if (JSON.stringify(context[prop][0]) !== JSON.stringify(statUx)) {
+                context[prop][1](statUx);
+            }
+        }
+    }
+    sub(context, fc = false) {
+        if (!fc) {
+            this.store.subscribe(() => this.classSync(context));
+        }
+        if (fc) {
+            this.store.subscribe(() => this.fcSync(context));
+        }
     }
     reset() {
         for (let k in this.actionTypes) {

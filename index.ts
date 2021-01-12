@@ -69,7 +69,7 @@ export default class KVStore {
   /*
    * Redux store subscribe helper function to compare component state and redux state and setState if applicable
    */
-  sync(context: any) {
+  classSync(context: any) {
     // Check if the component is mounted instead of unsubscribing on componentWillUnmount
     if (context.updater.isMounted(context)) {
       // Create new object to prevent reference issues
@@ -102,9 +102,29 @@ export default class KVStore {
     }
   }
 
+  // Functional Component / Hooks Sync
+  fcSync(context: any) {
+    for (let prop in context) {
+      // Get the Redux state of the subscriber state property
+      let statUx = this.get(String(prop));
+
+        // Compare current value of Functional Component and Redux Store
+        if (JSON.stringify(context[prop][0]) !== JSON.stringify(statUx)) {
+          // Execute hook setter function
+          context[prop][1](statUx);
+        }
+    }
+  }
+
   // Shorthand subscriber for subbed component
-  sub(context: any) {
-    this.store.subscribe(() => this.sync(context));
+  sub(context: any, fc: boolean = false) {
+    if (!fc) {
+      this.store.subscribe(() => this.classSync(context));
+    }
+
+    if (fc) {
+      this.store.subscribe(() => this.fcSync(context));
+    }
   }
 
   //Reset the store to it's default values

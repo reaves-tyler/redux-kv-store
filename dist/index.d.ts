@@ -11,8 +11,9 @@ export default class KVStore {
     }): object & {
         [x: string]: string | number | boolean | object | [] | undefined;
     };
-    sync(context: any): void;
-    sub(context: any): void;
+    classSync(context: any): void;
+    fcSync(context: any): void;
+    sub(context: any, fc?: boolean): void;
     reset(): void;
     set(prop: string, payload: object | [] | boolean | number | string | undefined): any;
     get(prop: string): any;
