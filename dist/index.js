@@ -53,7 +53,7 @@ class KVStore {
     fcSync(context) {
         for (let prop in context) {
             let statUx = this.get(String(prop));
-            if (statUx &&
+            if (statUx !== undefined &&
                 context[prop] &&
                 context[prop].length === 2 &&
                 JSON.stringify(context[prop][0]) !== JSON.stringify(statUx)) {
