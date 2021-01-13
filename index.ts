@@ -110,7 +110,7 @@ export default class KVStore {
 
       // Compare current value of Functional Component and Redux Store
       if (
-        statUx &&
+        statUx !== undefined &&
         context[prop] &&
         context[prop].length === 2 &&
         JSON.stringify(context[prop][0]) !== JSON.stringify(statUx)
