@@ -108,11 +108,16 @@ export default class KVStore {
       // Get the Redux state of the subscriber state property
       let statUx = this.get(String(prop));
 
-        // Compare current value of Functional Component and Redux Store
-        if (JSON.stringify(context[prop][0]) !== JSON.stringify(statUx)) {
-          // Execute hook setter function
-          context[prop][1](statUx);
-        }
+      // Compare current value of Functional Component and Redux Store
+      if (
+        statUx &&
+        context[prop] &&
+        context[prop].length === 2 &&
+        JSON.stringify(context[prop][0]) !== JSON.stringify(statUx)
+      ) {
+        // Execute hook setter function
+        context[prop][1](statUx);
+      }
     }
   }
 
